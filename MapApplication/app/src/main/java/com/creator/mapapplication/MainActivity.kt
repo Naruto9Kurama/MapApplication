@@ -1,14 +1,15 @@
 package com.creator.mapapplication
 
-import android.R
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.creator.mapapplication.databinding.ActivityMainBinding
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +41,26 @@ class MainActivity : AppCompatActivity() {
         mapView.getController().setCenter(startPoint)
         mapView.getController().setZoom(10) // Se
 
+
+// Add map click event
+        // Add map click event
+        mapView.overlays.add(MapEventsOverlay(object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(geoPoint: GeoPoint): Boolean {
+                // Handle single tap event
+                val startMarker = Marker(mapView)
+                startMarker.position = geoPoint
+                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                mapView.getOverlays().add(startMarker)
+//                showToast("Single tap: " + geoPoint.latitude + ", " + geoPoint.longitude)
+                return true
+            }
+
+            override fun longPressHelper(geoPoint: GeoPoint): Boolean {
+                // Handle long press event
+//                showToast("Long press: " + geoPoint.latitude + ", " + geoPoint.longitude)
+                return false
+            }
+        }))
 
     }
 
